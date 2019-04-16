@@ -30,7 +30,6 @@ class GeocodingService:
 
     def geocode(self):
         url = "{}?{}".format(self.base_url, urllib.parse.urlencode(self.params()))
-        print(url)
         try:
             response = urllib.request.urlopen(url)
         except urllib.request.URLError as e:
@@ -66,7 +65,10 @@ class HereService(GeocodingService):
     def parse_results(self, text):
         data = json.loads(text)
         coordinates = data['Response']['View'][0]['Result'][0]['Location']['DisplayPosition']
-        return coordinates
+        return {
+            'lat' : coordinates['Latitude'],
+            'lng' : coordinates['Longitude']
+        }
     
 
 
