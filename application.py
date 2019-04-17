@@ -28,4 +28,5 @@ class Application(BaseHTTPRequestHandler):
         self.send_response(status_code)
         self.end_headers()
         self.wfile.write(response_text.encode('utf-8'))
+        return
     

@@ -11,9 +11,9 @@ class Geocoder:
         google_service = GoogleService(self.config, address)
         here_service = HereService(self.config, address)
         
-        result = here_service.geocode()
+        result = google_service.geocode()
         if result == False:
-            result = google_service.geocode()
+            result = here_service.geocode()
         return result
 
 class GeocodingService:    
