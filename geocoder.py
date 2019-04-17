@@ -23,10 +23,10 @@ class GeocodingService:
         self.address = address
 
     def params(self):
-        pass
+        raise NotImplementedError()
 
     def parse_results(self, text):
-        pass
+        raise NotImplementedError()
 
     def geocode(self):
         url = "{}?{}".format(self.base_url, urllib.parse.urlencode(self.params()))
@@ -49,7 +49,10 @@ class GoogleService(GeocodingService):
     
     def parse_results(self, text):
         data = json.loads(text)
-        coordinates = data['results'][0]['geometry']['location']
+        try:
+            coordinates = data['results'][0]['geometry']['location']
+        except (KeyError, IndexError) as e:
+            return False     
         return coordinates
 
 class HereService(GeocodingService):
@@ -64,7 +67,11 @@ class HereService(GeocodingService):
     
     def parse_results(self, text):
         data = json.loads(text)
-        coordinates = data['Response']['View'][0]['Result'][0]['Location']['DisplayPosition']
+        try:
+            coordinates = data['Response']['View'][0]['Result'][0]['Location']['DisplayPosition']
+        except (KeyError, IndexError) as e:
+            return False
+        
         return {
             'lat' : coordinates['Latitude'],
             'lng' : coordinates['Longitude']
